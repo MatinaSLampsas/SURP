@@ -15,4 +15,4 @@ library(tidyverse)
 
 ```
 
-## EXAMPLE
+## read data 
