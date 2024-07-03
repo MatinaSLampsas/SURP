@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Load the data
-data = pd.read_csv('C:/Users/kalis/OneDrive/Documents/Housing_research/combined_final.csv')
+data = pd.read_csv('data/combined_final.csv')
 
 # Define the function to calculate distance based on coordinates
 def haversine(lat1, lon1, lat2, lon2):
