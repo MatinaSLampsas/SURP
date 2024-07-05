@@ -66,5 +66,6 @@ houses_gdf['distance_to_shoreline_mi'] = houses_gdf.geometry.apply(lambda x: sho
 print(houses_gdf[['ADDRESS', 'distance_to_shoreline_mi']].head())
 data['dist_coast'] = houses_gdf['distance_to_shoreline_mi']
 
-# Show updated DataFrame with new distance variables
+
+# Show updated DataFrame with new distance variable
 print(data[['ADDRESS','dist_coast']].head())
