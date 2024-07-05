@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import geopandas as gpd
+from shapely.geometry import Point
 
 # Load the data
 data = pd.read_csv('data/combined_final.csv')
@@ -42,3 +44,15 @@ data['dist_calpoly'] = data.apply(lambda row: haversine(row['LATITUDE'], row['LO
 # Show updated DataFrame with new distance variables
 data[['ADDRESS', 'dist_ocean', 'dist_downtown', 'dist_calpoly']].head()
 print(data[['ADDRESS', 'dist_ocean', 'dist_downtown', 'dist_calpoly']].head())
+
+
+#Read in the coastline data
+coastline_data = gpd.read_file('C:/Users/matin/OneDrive - Cal Poly/noaa_composite/composite_shoreline_final.shp')
+coastline = gpd.GeoSeries(coastline_data.geometry.union_all())
+
+
+home_locations = gpd.GeoDataFrame(geometry=gpd.points_from_xy(data['LONGITUDE'], data['LATITUDE']), crs='EPSG:4326')
+
+# Assuming home locations are in WGS84 (lat/lon))
+# preview the coastal data
+print(coastline_data.head())
