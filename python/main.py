@@ -45,29 +45,26 @@ data['dist_calpoly'] = data.apply(lambda row: haversine(row['LATITUDE'], row['LO
 data[['ADDRESS', 'dist_ocean', 'dist_downtown', 'dist_calpoly']].head()
 print(data[['ADDRESS', 'dist_ocean', 'dist_downtown', 'dist_calpoly']].head())
 
+# Load shoreline data
+shoreline_data = gpd.read_file('CCal/Cencal_1998_2002.shp')
 
-#Read in the coastline data
-coastline_data = gpd.read_file('data/composite_shoreline_final.shp')
-coastline = gpd.GeoSeries(coastline_data.geometry.union_all())
+# Convert house data to a GeoDataFrame assuming it has 'LATITUDE' and 'LONGITUDE' columns
+house_geometry = [Point(xy) for xy in zip(data['LONGITUDE'], data['LATITUDE'])]
+houses_gdf = gpd.GeoDataFrame(data, geometry=house_geometry, crs='EPSG:4326')
 
+# Define a suitable projected CRS (e.g., UTM)
+target_crs = 'EPSG:32610'  # UTM Zone 10N for California, adjust as per your region
 
-home_locations = gpd.GeoDataFrame(geometry=gpd.points_from_xy(data['LONGITUDE'], 
-                                                              data['LATITUDE']), 
-                                                              crs='EPSG:4326')
+# Reproject both datasets to the same projected CRS
+houses_gdf = houses_gdf.to_crs(target_crs)
+shoreline_data = shoreline_data.to_crs(target_crs)
 
-# Assuming home locations are in WGS84 (lat/lon))
-# preview the coastal data
-print(coastline_data.head())
+# Calculate distance from each house to the shoreline in kilometers
+houses_gdf['distance_to_shoreline_mi'] = houses_gdf.geometry.apply(lambda x: shoreline_data.distance(x).min()) / 1000
 
-# Function to calculate distance from a point to the coastline
-def calculate_distance_to_coastline(point, coastline):
-    return point.distance(coastline)
+# Display or further analyze the houses_gdf DataFrame with distances in miles
+print(houses_gdf[['ADDRESS', 'distance_to_shoreline_mi']].head())
+data['dist_coast'] = houses_gdf['distance_to_shoreline_mi']
 
-# Calculate distance for each home
-home_locations['dist_to_coast'] = home_locations['geometry'].apply(lambda x: calculate_distance_to_coastline(x, coastline))
-
-# Combine the distances back to the original DataFrame
-#data['dist_to_coast'] = home_locations['dist_to_coast']
-
-# Show updated DataFrame with new distance variable
-#print(data[['ADDRESS', 'dist_to_coast']].head())
+# Show updated DataFrame with new distance variables
+print(data[['ADDRESS','dist_calpoly','dist_calpoly','dist_coast']].head())
