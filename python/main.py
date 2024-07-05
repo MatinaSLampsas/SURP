@@ -67,4 +67,4 @@ print(houses_gdf[['ADDRESS', 'distance_to_shoreline_mi']].head())
 data['dist_coast'] = houses_gdf['distance_to_shoreline_mi']
 
 # Show updated DataFrame with new distance variables
-print(data[['ADDRESS','dist_calpoly','dist_calpoly','dist_coast']].head())
+print(data[['ADDRESS','dist_coast']].head())
