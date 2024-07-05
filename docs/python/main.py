@@ -71,4 +71,4 @@ data['dist_coast'] = houses_gdf['distance_to_shoreline_mi']
 print(data[['ADDRESS','dist_coast']].head())
 
 #make a new csv file containing the distances from the coast and the addresses
-data[['ADDRESS','dist_downtown', 'dist_calpoly','dist_coast']].to_csv('house_dist.csv', index=False)
+data.to_csv('house_dist.csv', index=False)
